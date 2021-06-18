@@ -14,14 +14,16 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-            
-      - name: Build stuff
-        run: |
+      - name: Prepare Env
+        run: | 
             sudo apt install yui-compressor
+            sudo apt install libxml2-utils
             wget -q https://github.com/roleoroleo/sonoff-hack/releases/download/toolchain-0.0.1/arm-sonoff-linux-uclibcgnueabi.tgz
             tar xf arm-sonoff-linux-uclibcgnueabi.tgz && rm -rf arm-sonoff-linux-uclibcgnueabi.tgz
-            PATH=${PATH}:$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/
             git submodule update --init
+      - name: Build stuff
+        run: |
+            PATH=${PATH}:$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/
             ./scripts/compile.sh
             ./scripts/pack_fw.all.sh
             cd build
