@@ -18,11 +18,10 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Download dependent scripts
         run: |
-            wget https://github.com/roleoroleo/sonoff-hack/releases/download/toolchain-0.0.1/arm-sonoff-linux-uclibcgnueabi.tgz
-            tar xf arm-sonoff-linux-uclibcgnueabi.tgz
+            wget -q https://github.com/roleoroleo/sonoff-hack/releases/download/toolchain-0.0.1/arm-sonoff-linux-uclibcgnueabi.tgz
+            tar xf arm-sonoff-linux-uclibcgnueabi.tgz && rm -rf arm-sonoff-linux-uclibcgnueabi.tgz
             PATH=${PATH}:$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/
-            pwd
-            ls -la
+            git submodule update --init
             ./scripts/compile.sh
             ./scripts/pack_fw.all.sh
             ls -la
