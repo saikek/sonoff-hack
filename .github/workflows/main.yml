@@ -20,7 +20,7 @@ jobs:
         run: |
             wget https://github.com/roleoroleo/sonoff-hack/releases/download/toolchain-0.0.1/arm-sonoff-linux-uclibcgnueabi.tgz
             tar xf arm-sonoff-linux-uclibcgnueabi.tgz
-            PATH=${PATH}:$(pwd)
+            PATH=${PATH}:$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/
             pwd
             ls -la
             ./scripts/compile.sh
