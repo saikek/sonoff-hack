@@ -1,0 +1,29 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a set of commands using the runners shell
+      - name: Download dependent scripts
+        run: |
+            wget https://github.com/roleoroleo/sonoff-hack/releases/download/toolchain-0.0.1/arm-sonoff-linux-uclibcgnueabi.tgz
+            tar xf arm-sonoff-linux-uclibcgnueabi.tgz
+            PATH=${PATH}:$(pwd)
+            pwd
+            ls -la
+            ./scripts/compile.sh
+            ./scripts/pack_fw.all.sh
+            ls -la
+            
