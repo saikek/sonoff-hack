@@ -8,28 +8,9 @@ on:
   pull_request:
 
 jobs:
-
-  prepare-env:
-    runs-on: ubuntu-latest
-    steps:
-     - name: Prepare Env
-       run: | 
-            sudo apt install yui-compressor
-            sudo apt install libxml2-utils
-            wget -q https://github.com/roleoroleo/sonoff-hack/releases/download/toolchain-0.0.1/arm-sonoff-linux-uclibcgnueabi.tgz
-            tar xf arm-sonoff-linux-uclibcgnueabi.tgz && rm -rf arm-sonoff-linux-uclibcgnueabi.tgz
-
-  get-code:
-    runs-on: ubuntu-latest
-    needs: prepare-env
-    steps:
-      - uses: actions/checkout@v2
-      - name: Init submodules
-        run: git submodule update --init
-
   build:
     runs-on: ubuntu-latest
-    needs: get-code
+
     strategy:
             matrix:
                 modules:
@@ -49,19 +30,23 @@ jobs:
                 - www
 
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Prepare Env
+        run: | 
+            sudo apt install yui-compressor
+            sudo apt install libxml2-utils
+            wget -q https://github.com/roleoroleo/sonoff-hack/releases/download/toolchain-0.0.1/arm-sonoff-linux-uclibcgnueabi.tgz
+            tar xf arm-sonoff-linux-uclibcgnueabi.tgz && rm -rf arm-sonoff-linux-uclibcgnueabi.tgz
+            git submodule update --init
+      
       - name: Build Submodules
         run: |    
-            pwd
-            ls -la
             bash -x ./scripts/compile_ci_pre.sh ${{ matrix.modules }}
 
-  wrap:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - name: Copy results
         run: |    
-            bash -x ./scripts/compile_ci_post.sh       
+            bash -x ./scripts/compile_ci_post.sh ${{ matrix.modules }}            
             
       - name: Build stuff
         run: |    
