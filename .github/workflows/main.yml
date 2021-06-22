@@ -22,16 +22,10 @@ jobs:
             tar xf arm-sonoff-linux-uclibcgnueabi.tgz && rm -rf arm-sonoff-linux-uclibcgnueabi.tgz
             git submodule update --init
       
-      - name: Update Builder env var
-        run: | 
-            echo "$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/" >> $GITHUB_PATH
-            sudo echo "$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/" >> ~/.basrhc
-            echo "$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/" >> ~/.basrhc
-      
       - name: Build stuff
         run: |    
-            sudo bash -x ./scripts/compile.sh
-            sudo bash -x ./scripts/pack_fw.all.sh
+            sudo PATH="$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/" bash -x ./scripts/compile.sh
+            sudo PATH="$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/" bash -x ./scripts/pack_fw.all.sh
             cd build
             tar cf firmware.tar sonoff-hack
             gzip firmware.tar
