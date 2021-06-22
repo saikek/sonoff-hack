@@ -70,11 +70,11 @@ jobs:
           path: build/sonoff-hack/
 
   post-build-actions:
-    needs: build-separate-modules
+    needs: build-mqtt-module
     runs-on: ubuntu-latest
       steps:
       - uses: actions/download-artifact@v2
-      
+
       - name: Build stuff
         run: |    
             ./scripts/compile_ci_post.sh
