@@ -71,7 +71,9 @@ compile_module()
 
 ###############################################################################
 
-source "$(get_script_dir)/common.sh"
+export SCRIPT_DIR=$(get_script_dir)
+
+source "${SCRIPT_DIR}/common.sh"
 
 echo ""
 echo "------------------------------------------------------------------------"
@@ -83,19 +85,17 @@ echo ""
 # Hisilicon Linux, Cross-Toolchain PATH
 export PATH="${GITHUB_WORKSPACE}/arm-sonoff-linux-uclibcgnueabi/bin:$PATH"
 
-mkdir -p "$(get_script_dir)/../build/sonoff-hack"
-
-SRC_DIR=$(get_script_dir)/../src
-
+mkdir -p "${SCRIPT_DIR}/../build/sonoff-hack"
+SRC_DIR=${SCRIPT_DIR}/../src
 
 if [ ! -z "$1" ]; then 
     echo "=============================== MODULE $1 ====================="
 	compile_module $(normalize_path "${SRC_DIR}/$1") || exit 1
 else
-    for SUB_DIR in $SRC_DIR/* ; do
+    for SUB_DIR in ${SRC_DIR}/* ; do
     if [ -d ${SUB_DIR} ]; then # Will not run if no directories are available
         echo "=============================== MODULE ${SUB_DIR} ====================="
-        compile_module $(normalize_path "$SUB_DIR") || exit 1
+        compile_module $(normalize_path "${SUB_DIR}") || exit 1
     fi
     done
 fi
