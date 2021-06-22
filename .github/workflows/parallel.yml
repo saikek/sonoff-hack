@@ -18,7 +18,6 @@ jobs:
           - jq
           - libsqlite
           - mosquitto
-          - mqtt
           - onvif_srvd
           - ptz
           - record
@@ -47,23 +46,49 @@ jobs:
           name: ${{ matrix.modules }}
           path: build/sonoff-hack/
 
+  build-mqtt-module:
+    needs: build-separate-modules
+    runs-on: ubuntu-latest
+      steps:
+      # It takes 17 seconds for this step, so for not it's ok
+      - uses: actions/checkout@v2
+      - name: Prepare Env
+        run: | 
+            sudo apt install yui-compressor libxml2-utils flex 
+            wget -q https://github.com/roleoroleo/sonoff-hack/releases/download/toolchain-0.0.1/arm-sonoff-linux-uclibcgnueabi.tgz
+            tar xf arm-sonoff-linux-uclibcgnueabi.tgz && rm -rf arm-sonoff-linux-uclibcgnueabi.tgz
+            git submodule update --init
+      
+      - name: Build Submodules
+        run: |    
+            ./scripts/compile_ci_pre.sh mqtt
 
-      # - name: Build stuff
-      #   run: |    
-      #       ./scripts/compile_ci_post.sh
+      - name: Upload Artifact mqtt
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.modules }}
+          path: build/sonoff-hack/
 
-      # - name: Pack stuff
-      #   run: |    
-      #       sudo ./scripts/pack_fw.all.sh
-      #       ls -la
-      #       pwd           
+  post-build-actions:
+    needs: build-separate-modules
+    runs-on: ubuntu-latest
+      steps:
+      - uses: actions/download-artifact@v2
+      
+      - name: Build stuff
+        run: |    
+            ./scripts/compile_ci_post.sh
+
+      - name: Pack stuff
+        run: |    
+            sudo ./scripts/pack_fw.all.sh  
             
-      # - name: Upload Artifact GK-200MP2B
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     path: out/GK-200MP2B/GK-200MP2B_0.1.0.tgz
+      - name: Upload Artifact GK-200MP2B
+        uses: actions/upload-artifact@v2
+        with:
+          path: out/GK-200MP2B/GK-200MP2B_0.1.0.tgz
 
-      # - name: Upload Artifact GK-200MP2C
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     path: out/GK-200MP2B/GK-200MP2C_*.tgz
+      - name: Upload Artifact GK-200MP2C
+        uses: actions/upload-artifact@v2
+        with:
+          path: out/GK-200MP2B/GK-200MP2C_*.tgz
