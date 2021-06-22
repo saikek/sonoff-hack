@@ -36,14 +36,14 @@ jobs:
             tar xf arm-sonoff-linux-uclibcgnueabi.tgz && rm -rf arm-sonoff-linux-uclibcgnueabi.tgz
             git submodule update --init
       
-      - name: Build mosquitto
+      - name: Build mqtt & dep
         if: ${{ matrix.modules == 'mqtt' }}
         run: |    
             ./scripts/compile_ci_pre.sh mosquitto
             ./scripts/compile_ci_pre.sh ${{ matrix.modules }}
 
       - name: Build Submodules
-      if: ${{ matrix.modules != 'mqtt' }}
+        if: ${{ matrix.modules != 'mqtt' }}
         run: |    
             ./scripts/compile_ci_pre.sh ${{ matrix.modules }}
 
