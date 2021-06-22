@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Build firmware
 
 # Controls when the action will run. 
 on:
@@ -8,24 +8,36 @@ on:
   pull_request:
 
 jobs:
-  build:
+  env-prep:
+    name: Prepare Environment
     runs-on: ubuntu-latest
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: Prepare Env
+        with:
+          fetch-depth: 0
+      - name: Install Dependencies
         run: | 
             sudo apt install yui-compressor
             sudo apt install libxml2-utils
+      - name: Clone Builder tools repo
+        run: | 
             wget -q https://github.com/roleoroleo/sonoff-hack/releases/download/toolchain-0.0.1/arm-sonoff-linux-uclibcgnueabi.tgz
             tar xf arm-sonoff-linux-uclibcgnueabi.tgz && rm -rf arm-sonoff-linux-uclibcgnueabi.tgz
+
+      - name: Init Subrepos
+        run: | 
             git submodule update --init
+            
       - name: Build stuff
         run: |
             PATH=${PATH}:$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/
-            ./scripts/compile.sh
-            ./scripts/pack_fw.all.sh
+            sudo ./scripts/compile.sh
+            sudo ./scripts/pack_fw.all.sh
+      
+      - name: Pack Result
+        run: |            
             cd build
             tar cf firmware.tar sonoff-hack
             gzip firmware.tar
@@ -35,4 +47,3 @@ jobs:
         with:
           name: firmware.tar.gz
           path: build/firmware.tar.gz
-            
