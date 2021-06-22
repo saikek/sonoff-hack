@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: false
       matrix:
           modules:
           - busybox
@@ -41,8 +40,10 @@ jobs:
         if: ${{ matrix.modules == 'mqtt' }}
         run: |    
             ./scripts/compile_ci_pre.sh mosquitto
+            ./scripts/compile_ci_pre.sh ${{ matrix.modules }}
 
       - name: Build Submodules
+      if: ${{ matrix.modules != 'mqtt' }}
         run: |    
             ./scripts/compile_ci_pre.sh ${{ matrix.modules }}
 
