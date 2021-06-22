@@ -83,8 +83,6 @@ echo ""
 # Hisilicon Linux, Cross-Toolchain PATH
 export PATH="${GITHUB_WORKSPACE}/arm-sonoff-linux-uclibcgnueabi/bin:$PATH"
 
-rm -rf "$(get_script_dir)/../build/"
-
 mkdir -p "$(get_script_dir)/../build/sonoff-hack"
 
 SRC_DIR=$(get_script_dir)/../src
