@@ -89,11 +89,15 @@ mkdir -p "$(get_script_dir)/../build/sonoff-hack"
 
 SRC_DIR=$(get_script_dir)/../src
 
-# compile_module $(normalize_path "${SRC_DIR}/$1") || exit 1
 
-for SUB_DIR in $SRC_DIR/* ; do
+if [ ! -z "$1" ]; then 
+    echo "=============================== MODULE $1 ====================="
+	compile_module $(normalize_path "${SRC_DIR}/$1") || exit 1
+else
+    for SUB_DIR in $SRC_DIR/* ; do
     if [ -d ${SUB_DIR} ]; then # Will not run if no directories are available
         echo "=============================== MODULE ${SUB_DIR} ====================="
         compile_module $(normalize_path "$SUB_DIR") || exit 1
     fi
-done
+    done
+fi
