@@ -18,6 +18,7 @@ jobs:
           - jq
           - libsqlite
           - mosquitto
+          - mqtt
           - onvif_srvd
           - ptz
           - record
@@ -36,6 +37,11 @@ jobs:
             tar xf arm-sonoff-linux-uclibcgnueabi.tgz && rm -rf arm-sonoff-linux-uclibcgnueabi.tgz
             git submodule update --init
       
+      - name: Build mosquitto
+        if: ${{ matrix.modules == "mqtt" }}
+        run: |    
+            ./scripts/compile_ci_pre.sh mosquitto
+
       - name: Build Submodules
         run: |    
             ./scripts/compile_ci_pre.sh ${{ matrix.modules }}
@@ -46,31 +52,8 @@ jobs:
           name: ${{ matrix.modules }}
           path: build/sonoff-hack/
 
-  build-mqtt-module:
-    needs: build-separate-modules
-    runs-on: ubuntu-latest
-    steps:
-      # It takes 17 seconds for this step, so for not it's ok
-      - uses: actions/checkout@v2
-      - name: Prepare Env
-        run: | 
-            sudo apt install yui-compressor libxml2-utils flex 
-            wget -q https://github.com/roleoroleo/sonoff-hack/releases/download/toolchain-0.0.1/arm-sonoff-linux-uclibcgnueabi.tgz
-            tar xf arm-sonoff-linux-uclibcgnueabi.tgz && rm -rf arm-sonoff-linux-uclibcgnueabi.tgz
-            git submodule update --init
-      
-      - name: Build Submodules
-        run: |    
-            ./scripts/compile_ci_pre.sh mqtt
-
-      - name: Upload Artifact mqtt
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.modules }}
-          path: build/sonoff-hack/
-
   post-build-actions:
-    needs: build-mqtt-module
+    needs: build-separate-modules
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v2
