@@ -64,6 +64,8 @@ pack_image()
 
 source "$(get_script_dir)/common.sh"
 
+require_root
+
 if [ $# -ne 1 ]; then
     echo "Usage: pack_sw.sh camera_name"
     echo ""
