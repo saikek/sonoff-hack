@@ -56,9 +56,11 @@ jobs:
       - name: Upload Artifact GK-200MP2B
         uses: actions/upload-artifact@v2
         with:
-          path: out/GK-200MP2B/GK-200MP2B_0.1.0.tgz
+          name: GK-200MP2B.tar.gz
+          path: out/GK-200MP2B/**.tgz
 
       - name: Upload Artifact GK-200MP2C
         uses: actions/upload-artifact@v2
         with:
-          path: out/GK-200MP2B/GK-200MP2C_*.tgz
+          name: GK-200MP2C.tar.gz
+          path: out/GK-200MP2C/**.tgz
