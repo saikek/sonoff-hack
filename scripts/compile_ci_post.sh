@@ -23,16 +23,6 @@ get_script_dir()
     echo "$(cd `dirname $0` && pwd)"
 }
 
-source "$(get_script_dir)/common.sh"
-
-# this is needed because with sudo the PATH apparently doesn't contain it. Idk why
-# Hisilicon Linux, Cross-Toolchain PATH
-for SUB_DIR in $SRC_DIR/* ; do
-    if [ -d ${SUB_DIR} ]; then # Will not run if no directories are available
-        compile_module $(normalize_path "$SUB_DIR") || exit 1
-    fi
-done
-
 BIN_DIR=$(get_script_dir)/../bin
 BUILD_DIR=$(get_script_dir)/../build
 
