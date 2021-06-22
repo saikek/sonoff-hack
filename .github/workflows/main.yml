@@ -51,6 +51,8 @@ jobs:
     steps:
       - name: Build Submodules
         run: |    
+            pwd
+            ls -la
             bash -x ./scripts/compile_ci_pre.sh ${{ matrix.modules }}
 
   wrap:
