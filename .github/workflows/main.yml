@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Build firmware
 
 # Controls when the action will run. 
 on:
@@ -10,6 +10,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+            matrix:
+                modules:
+                - busybox
+                - dropbear
+                - ftpd
+                - jq
+                - libsqlite
+                - mosquitto
+                - mqtt
+                - onvif_srvd
+                - ptz
+                - record
+                - snapshot
+                - static
+                - wsdd
+                - www
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -22,13 +40,24 @@ jobs:
             tar xf arm-sonoff-linux-uclibcgnueabi.tgz && rm -rf arm-sonoff-linux-uclibcgnueabi.tgz
             git submodule update --init
       
+      - name: Build Submodules
+        run: |    
+            bash -x ./scripts/compile_ci_pre.sh ${{ matrix.modules }}
+
+      - name: Copy results
+        run: |    
+            bash -x ./scripts/compile_ci_post.sh ${{ matrix.modules }}            
+            
       - name: Build stuff
         run: |    
-            PATH="${PATH}:${GITHUB_WORKSPACE}/arm-sonoff-linux-uclibcgnueabi/bin/" bash -x ./scripts/compile.sh
             PATH="${PATH}:${GITHUB_WORKSPACE}/arm-sonoff-linux-uclibcgnueabi/bin/" bash -x ./scripts/pack_fw.all.sh
+      
+      - name: Prepare artifact
+        run: |             
             cd build
             tar cf firmware.tar sonoff-hack
-            gzip firmware.tar
+            gzip firmware.tar                       
+            
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
