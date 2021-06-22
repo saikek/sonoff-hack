@@ -25,12 +25,13 @@ jobs:
       - name: Update Builder env var
         run: | 
             echo "$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/" >> $GITHUB_PATH
+            sudo echo "$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/" >> ~/.basrhc
+            echo "$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/" >> ~/.basrhc
       
       - name: Build stuff
         run: |    
-            sudo env
-            sudo ./scripts/compile.sh
-            sudo ./scripts/pack_fw.all.sh
+            sudo bash -x ./scripts/compile.sh
+            sudo bash -x ./scripts/pack_fw.all.sh
             cd build
             tar cf firmware.tar sonoff-hack
             gzip firmware.tar
