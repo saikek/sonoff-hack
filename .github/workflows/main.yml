@@ -46,7 +46,7 @@ jobs:
 
       - name: Copy results
         run: |    
-            bash -x ./scripts/compile_ci_post.sh ${{ matrix.modules }}            
+            bash -x ./scripts/compile_ci_post.sh       
             
       - name: Build stuff
         run: |    
