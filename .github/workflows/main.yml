@@ -23,7 +23,7 @@ jobs:
             git submodule update --init
       - name: Build stuff
         run: |
-            PATH=${PATH}:$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/
+            sudo PATH=${PATH}:$(pwd)/arm-sonoff-linux-uclibcgnueabi/bin/
             sudo ./scripts/compile.sh
             sudo ./scripts/pack_fw.all.sh
             cd build
