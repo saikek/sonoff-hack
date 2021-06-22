@@ -38,7 +38,7 @@ jobs:
             git submodule update --init
       
       - name: Build mosquitto
-        if: ${{ matrix.modules == mqtt }}
+        if: ${{ matrix.modules == 'mqtt' }}
         run: |    
             ./scripts/compile_ci_pre.sh mosquitto
 
