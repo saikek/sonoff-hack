@@ -49,7 +49,7 @@ jobs:
   build-mqtt-module:
     needs: build-separate-modules
     runs-on: ubuntu-latest
-      steps:
+    steps:
       # It takes 17 seconds for this step, so for not it's ok
       - uses: actions/checkout@v2
       - name: Prepare Env
