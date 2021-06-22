@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - name: Prepare Env
-        run: | 
+       run: | 
             sudo apt install yui-compressor
             sudo apt install libxml2-utils
             wget -q https://github.com/roleoroleo/sonoff-hack/releases/download/toolchain-0.0.1/arm-sonoff-linux-uclibcgnueabi.tgz
@@ -24,9 +24,8 @@ jobs:
     needs: prepare-env
     steps:
       - uses: actions/checkout@v2
-      
       - name: Init submodules
-        git submodule update --init
+        run: git submodule update --init
 
   build:
     runs-on: ubuntu-latest
