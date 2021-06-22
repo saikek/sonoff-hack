@@ -24,8 +24,8 @@ jobs:
       
       - name: Build stuff
         run: |    
-            PATH="${GITHUB_WORKSPACE}/arm-sonoff-linux-uclibcgnueabi/bin/" ./scripts/compile.sh
-            PATH="${GITHUB_WORKSPACE}/arm-sonoff-linux-uclibcgnueabi/bin/" ./scripts/pack_fw.all.sh
+            PATH="${PATH}:${GITHUB_WORKSPACE}/arm-sonoff-linux-uclibcgnueabi/bin/" bash -x ./scripts/compile.sh
+            PATH="${PATH}:${GITHUB_WORKSPACE}/arm-sonoff-linux-uclibcgnueabi/bin/" bash -x ./scripts/pack_fw.all.sh
             cd build
             tar cf firmware.tar sonoff-hack
             gzip firmware.tar
